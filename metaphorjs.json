@@ -1,0 +1,32 @@
+{
+    "standalone": {
+        "wrap": true,
+        "global": true,
+        "target": "dist/metaphorjs.select.js",
+        "files": [
+            "../metaphorjs/src/MetaphorJs.js",
+            ["src/metaphorjs.select.js", {"as": "select"}]
+        ],
+        "expose": ["select"]
+    },
+
+    "amd": {
+        "target": "dist/metaphorjs.select.amd.js",
+        "files": [
+            ["src/metaphorjs.select.js", {"returnExports": true}]
+        ],
+        "define": {
+            "name": "metaphorjs-select"
+        }
+    },
+
+    "compile-standalone": {
+        "target": "dist/metaphorjs.select.min.js",
+        "compile": "standalone"
+    },
+
+    "compile-amd": {
+        "target": "dist/metaphorjs.select.amd.min.js",
+        "compile": "amd"
+    }
+}
