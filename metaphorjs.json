@@ -10,6 +10,13 @@
         "expose": ["select"]
     },
 
+    "npm": {
+        "target": "dist/metaphorjs.select.npm.js",
+        "files": [
+            ["src/metaphorjs.select.js", {"keepExports": true}]
+        ]
+    },
+
     "amd": {
         "target": "dist/metaphorjs.select.amd.js",
         "files": [
