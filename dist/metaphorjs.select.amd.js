@@ -1,14 +1,67 @@
 define("metaphorjs-select", function() {
 
-var strUndef = "undefined";
+var undf = undefined;
+var toString = Object.prototype.toString;
 
 
-var isUndefined = function(any) {
-    return typeof any == strUndef;
-};
+
+var varType = function(){
+
+    var types = {
+        '[object String]': 0,
+        '[object Number]': 1,
+        '[object Boolean]': 2,
+        '[object Object]': 3,
+        '[object Function]': 4,
+        '[object Array]': 5,
+        '[object RegExp]': 9,
+        '[object Date]': 10
+    };
+
+
+    /**
+        'string': 0,
+        'number': 1,
+        'boolean': 2,
+        'object': 3,
+        'function': 4,
+        'array': 5,
+        'null': 6,
+        'undefined': 7,
+        'NaN': 8,
+        'regexp': 9,
+        'date': 10
+    */
+
+    return function(val) {
+
+        if (!val) {
+            if (val === null) {
+                return 6;
+            }
+            if (val === undf) {
+                return 7;
+            }
+        }
+
+        var num = types[toString.call(val)];
+
+        if (num === undf) {
+            return -1;
+        }
+
+        if (num == 1 && isNaN(val)) {
+            return 8;
+        }
+
+        return num;
+    };
+
+}();
+
 
 var isString = function(value) {
-    return typeof value == "string";
+    return typeof value == "string" || varType(value) === 0;
 };
 
 
@@ -17,7 +70,7 @@ var isString = function(value) {
  * @returns {[]}
  */
 var toArray = function(list) {
-    if (list && !isUndefined(list.length) && !isString(list)) {
+    if (list && !list.length != undf && !isString(list)) {
         for(var a = [], i =- 1, l = list.length>>>0; ++i !== l; a[i] = list[i]){}
         return a;
     }
@@ -183,7 +236,7 @@ return function() {
         attrMods    = {
             /* W3C "an E element with a "attr" attribute" */
             '': function (child, attr) {
-                return !!child.getAttribute(attr);
+                return child.getAttribute(attr) !== null;
             },
             /*
              W3C "an E element whose "attr" attribute value is

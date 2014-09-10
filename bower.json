@@ -1,24 +1,24 @@
 {
-  "name": "metaphorjs-select",
-  "version": "0.1.0",
-  "authors": [
-    "kuindji <kuindji@gmail.com>"
-  ],
-  "description": "MetaphorJs selector engine",
-  "main": "dist/metaphorjs.select.amd.min.js",
-  "moduleType": [
-    "amd"
-  ],
-  "keywords": [
-    "selector",
-    "querySelectorAll"
-  ],
-  "license": "MIT",
-  "homepage": "https://github.com/kuindji/metaphorjs-select",
-  "ignore": [
-    "node_modules",
-    "bower_components",
-    "test",
-    "tests"
-  ]
+    "name": "metaphorjs-select",
+    "version": "0.1.1",
+    "authors": [
+        "kuindji <kuindji@gmail.com>"
+    ],
+    "description": "MetaphorJs selector engine",
+    "main": "dist/metaphorjs.select.amd.min.js",
+    "moduleType": [
+        "amd"
+    ],
+    "keywords": [
+        "selector",
+        "querySelectorAll"
+    ],
+    "license": "MIT",
+    "homepage": "https://github.com/kuindji/metaphorjs-select",
+    "ignore": [
+        "node_modules",
+        "bower_components",
+        "test",
+        "tests"
+    ]
 }

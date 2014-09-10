@@ -1,39 +1,51 @@
 {
-    "standalone": {
-        "wrap": true,
-        "global": true,
-        "target": "dist/metaphorjs.select.js",
-        "files": [
-            "../metaphorjs/src/MetaphorJs.js",
-            ["src/metaphorjs.select.js", {"as": "select"}]
-        ],
-        "expose": ["select"]
-    },
-
-    "npm": {
-        "target": "dist/metaphorjs.select.npm.js",
-        "files": [
-            ["src/metaphorjs.select.js", {"keepExports": true}]
-        ]
-    },
-
-    "amd": {
-        "target": "dist/metaphorjs.select.amd.js",
-        "files": [
-            ["src/metaphorjs.select.js", {"returnExports": true}]
-        ],
-        "define": {
-            "name": "metaphorjs-select"
+    "version": "0.1.1",
+    "push": [
+        "github"
+    ],
+    "build": {
+        "standalone": {
+            "wrap": true,
+            "global": true,
+            "target": "dist/metaphorjs.select.js",
+            "files": [
+                "../metaphorjs/src/MetaphorJs.js",
+                [
+                    "src/metaphorjs.select.js",
+                    {
+                        "as": "select"
+                    }
+                ]
+            ],
+            "expose": [
+                "select"
+            ]
+        },
+        "npm": {
+            "target": "dist/metaphorjs.select.npm.js",
+            "compile": false,
+            "files": [
+                [
+                    "src/metaphorjs.select.js",
+                    {
+                        "keepExports": true
+                    }
+                ]
+            ]
+        },
+        "amd": {
+            "target": "dist/metaphorjs.select.amd.js",
+            "files": [
+                [
+                    "src/metaphorjs.select.js",
+                    {
+                        "returnExports": true
+                    }
+                ]
+            ],
+            "define": {
+                "name": "metaphorjs-select"
+            }
         }
-    },
-
-    "compile-standalone": {
-        "target": "dist/metaphorjs.select.min.js",
-        "compile": "standalone"
-    },
-
-    "compile-amd": {
-        "target": "dist/metaphorjs.select.amd.min.js",
-        "compile": "amd"
     }
 }

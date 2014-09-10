@@ -154,7 +154,7 @@ module.exports = function() {
         attrMods    = {
             /* W3C "an E element with a "attr" attribute" */
             '': function (child, attr) {
-                return !!child.getAttribute(attr);
+                return child.getAttribute(attr) !== null;
             },
             /*
              W3C "an E element whose "attr" attribute value is
