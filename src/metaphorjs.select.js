@@ -1,5 +1,6 @@
 
-var toArray = require("../../metaphorjs/src/func/array/toArray.js");
+var toArray = require("../../metaphorjs/src/func/array/toArray.js"),
+    attr = require("../../metaphorjs/src/func/dom/attr.js");
 
 /**
  * Modified version of YASS (http://yass.webo.in)
@@ -153,56 +154,65 @@ module.exports = function() {
 
         attrMods    = {
             /* W3C "an E element with a "attr" attribute" */
-            '': function (child, attr) {
-                return child.getAttribute(attr) !== null;
+            '': function (child, name) {
+                return attr(child, name) !== null;
             },
             /*
              W3C "an E element whose "attr" attribute value is
              exactly equal to "value"
              */
-            '=': function (child, attr, value) {
-                return (attr = child.getAttribute(attr)) && attr === value;
+            '=': function (child, name, value) {
+                var attrValue;
+                return (attrValue = attr(child, name)) && attrValue === value;
             },
             /*
              from w3.prg "an E element whose "attr" attribute value is
              a list of space-separated values, one of which is exactly
              equal to "value"
              */
-            '&=': function (child, attr, value) {
-                return (attr = child.getAttribute(attr)) && getAttrReg(value).test(attr);
+            '&=': function (child, name, value) {
+                var attrValue;
+                return (attrValue = attr(child, name)) && getAttrReg(value).test(attrValue);
             },
             /*
              from w3.prg "an E element whose "attr" attribute value
              begins exactly with the string "value"
              */
-            '^=': function (child, attr, value) {
-                return (attr = child.getAttribute(attr) + '') && !attr.indexOf(value);
+            '^=': function (child, name, value) {
+                var attrValue;
+                return (attrValue = attr(child, name) + '') && !attrValue.indexOf(value);
             },
             /*
              W3C "an E element whose "attr" attribute value
              ends exactly with the string "value"
              */
-            '$=': function (child, attr, value) {
-                return (attr = child.getAttribute(attr) + '') && attr.indexOf(value) == attr.length - value.length;
+            '$=': function (child, name, value) {
+                var attrValue;
+                return (attrValue = attr(child, name) + '') &&
+                       attrValue.indexOf(value) == attrValue.length - value.length;
             },
             /*
              W3C "an E element whose "attr" attribute value
              contains the substring "value"
              */
-            '*=': function (child, attr, value) {
-                return (attr = child.getAttribute(attr) + '') && attr.indexOf(value) != -1;
+            '*=': function (child, name, value) {
+                var attrValue;
+                return (attrValue = attr(child, name) + '') && attrValue.indexOf(value) != -1;
             },
             /*
              W3C "an E element whose "attr" attribute has
              a hyphen-separated list of values beginning (from the
              left) with "value"
              */
-            '|=': function (child, attr, value) {
-                return (attr = child.getAttribute(attr) + '') && (attr === value || !!attr.indexOf(value + '-'));
+            '|=': function (child, name, value) {
+                var attrValue;
+                return (attrValue = attr(child, name) + '') &&
+                       (attrValue === value || !!attrValue.indexOf(value + '-'));
             },
             /* attr doesn't contain given value */
-            '!=': function (child, attr, value) {
-                return !(attr = child.getAttribute(attr)) || !getAttrReg(value).test(attr);
+            '!=': function (child, name, value) {
+                var attrValue;
+                return !(attrValue = attr(child, name)) || !getAttrReg(value).test(attrValue);
             }
         };
 
@@ -217,7 +227,7 @@ module.exports = function() {
             qsaErr  = null,
             idx, cls, nodes,
             i, node, ind, mod,
-            attrs, attr, eql, value;
+            attrs, attrName, eql, value;
 
         if (qsa) {
             /* replace not quoted args with quoted one -- Safari doesn't understand either */
@@ -305,14 +315,14 @@ module.exports = function() {
                         nodes   = root.getElementsByTagName('*');
                         i       = 0;
                         attrs   = rGetSquare.exec(selector);
-                        attr    = attrs[1];
+                        attrName    = attrs[1];
                         eql     = attrs[2] || '';
                         value   = attrs[3];
 
                         while (node = nodes[i++]) {
                             /* check either attr is defined for given node or it's equal to given value */
-                            if (attrMods[eql] && (attrMods[eql](node, attr, value) ||
-                                                  (attr === 'class' && attrMods[eql](node, 'className', value)))) {
+                            if (attrMods[eql] && (attrMods[eql](node, attrName, value) ||
+                                                  (attrName === 'class' && attrMods[eql](node, 'className', value)))) {
                                 sets[idx++] = node;
                             }
                         }
@@ -379,7 +389,7 @@ module.exports = function() {
                             tag     = single[1] || '*';
                             id      = single[2];
                             klass   = single[3] ? ' ' + single[3] + ' ' : '';
-                            attr    = single[4];
+                            attrName    = single[4];
                             eql     = single[5] || '';
                             mod     = single[7];
 
@@ -430,9 +440,9 @@ module.exports = function() {
                                              */
                                             if ((!id || item.id === id) &&
                                                 (!klass || (' ' + item.className + ' ').indexOf(klass) != -1) &&
-                                                (!attr || (attrMods[eql] &&
-                                                           (attrMods[eql](item, attr, single[6]) ||
-                                                            (attr === 'class' &&
+                                                (!attrName || (attrMods[eql] &&
+                                                           (attrMods[eql](item, attrName, single[6]) ||
+                                                            (attrName === 'class' &&
                                                              attrMods[eql](item, 'className', single[6]))))) &&
                                                 !item.yeasss && !(mods[mod] ? mods[mod](item, ind) : mod)) {
 
@@ -458,9 +468,9 @@ module.exports = function() {
                                                 (tag === '*' || child.nodeName.toLowerCase() === tag) &&
                                                 (!id || child.id === id) &&
                                                 (!klass || (' ' + child.className + ' ').indexOf(klass) != -1) &&
-                                                (!attr || (attrMods[eql] &&
-                                                           (attrMods[eql](item, attr, single[6]) ||
-                                                            (attr === 'class' &&
+                                                (!attrName || (attrMods[eql] &&
+                                                           (attrMods[eql](item, attrName, single[6]) ||
+                                                            (attrName === 'class' &&
                                                              attrMods[eql](item, 'className', single[6]))))) &&
                                                 !child.yeasss &&
                                                 !(mods[mod] ? mods[mod](child, ind) : mod)) {
@@ -480,9 +490,9 @@ module.exports = function() {
                                             (child.nodeName.toLowerCase() === tag.toLowerCase() || tag === '*') &&
                                             (!id || child.id === id) &&
                                             (!klass || (' ' + item.className + ' ').indexOf(klass) != -1) &&
-                                            (!attr ||
-                                             (attrMods[eql] && (attrMods[eql](item, attr, single[6]) ||
-                                                                (attr === 'class' &&
+                                            (!attrName ||
+                                             (attrMods[eql] && (attrMods[eql](item, attrName, single[6]) ||
+                                                                (attrName === 'class' &&
                                                                  attrMods[eql](item, 'className', single[6]))))) &&
                                             !child.yeasss && !(mods[mod] ? mods[mod](child, ind) : mod)) {
 
@@ -501,9 +511,9 @@ module.exports = function() {
                                             if (item.parentNode === child &&
                                                 (!id || item.id === id) &&
                                                 (!klass || (' ' + item.className + ' ').indexOf(klass) != -1) &&
-                                                (!attr || (attrMods[eql] &&
-                                                           (attrMods[eql](item, attr, single[6]) ||
-                                                            (attr === 'class' &&
+                                                (!attrName || (attrMods[eql] &&
+                                                           (attrMods[eql](item, attrName, single[6]) ||
+                                                            (attrName === 'class' &&
                                                              attrMods[eql](item, 'className', single[6]))))) &&
                                                 !item.yeasss &&
                                                 !(mods[mod] ? mods[mod](item, ind) : mod)) {
