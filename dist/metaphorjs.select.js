@@ -68,7 +68,8 @@ var varType = function(){
 
 
 var isString = function(value) {
-    return typeof value == "string" || varType(value) === 0;
+    return typeof value == "string" || value === ""+value;
+    //return typeof value == "string" || varType(value) === 0;
 };
 
 
@@ -77,7 +78,7 @@ var isString = function(value) {
  * @returns {[]}
  */
 var toArray = function(list) {
-    if (list && !list.length != undf && !isString(list)) {
+    if (list && !list.length != undf && list !== ""+list) {
         for(var a = [], i =- 1, l = list.length>>>0; ++i !== l; a[i] = list[i]){}
         return a;
     }
@@ -88,21 +89,8 @@ var toArray = function(list) {
         return [];
     }
 };
-
-
-var attr = function(el, name, value) {
-    if (!el || !el.getAttribute) {
-        return null;
-    }
-    if (value === undf) {
-        return el.getAttribute(name);
-    }
-    else if (value === null) {
-        return el.removeAttribute(name);
-    }
-    else {
-        return el.setAttribute(name, value);
-    }
+var getAttr = function(el, name) {
+    return el.getAttribute(name);
 };
 
 
@@ -259,7 +247,7 @@ var select = function() {
         attrMods    = {
             /* W3C "an E element with a "attr" attribute" */
             '': function (child, name) {
-                return attr(child, name) !== null;
+                return getAttr(child, name) !== null;
             },
             /*
              W3C "an E element whose "attr" attribute value is
@@ -267,7 +255,7 @@ var select = function() {
              */
             '=': function (child, name, value) {
                 var attrValue;
-                return (attrValue = attr(child, name)) && attrValue === value;
+                return (attrValue = getAttr(child, name)) && attrValue === value;
             },
             /*
              from w3.prg "an E element whose "attr" attribute value is
@@ -276,7 +264,7 @@ var select = function() {
              */
             '&=': function (child, name, value) {
                 var attrValue;
-                return (attrValue = attr(child, name)) && getAttrReg(value).test(attrValue);
+                return (attrValue = getAttr(child, name)) && getAttrReg(value).test(attrValue);
             },
             /*
              from w3.prg "an E element whose "attr" attribute value
@@ -284,7 +272,7 @@ var select = function() {
              */
             '^=': function (child, name, value) {
                 var attrValue;
-                return (attrValue = attr(child, name) + '') && !attrValue.indexOf(value);
+                return (attrValue = getAttr(child, name) + '') && !attrValue.indexOf(value);
             },
             /*
              W3C "an E element whose "attr" attribute value
@@ -292,7 +280,7 @@ var select = function() {
              */
             '$=': function (child, name, value) {
                 var attrValue;
-                return (attrValue = attr(child, name) + '') &&
+                return (attrValue = getAttr(child, name) + '') &&
                        attrValue.indexOf(value) == attrValue.length - value.length;
             },
             /*
@@ -301,7 +289,7 @@ var select = function() {
              */
             '*=': function (child, name, value) {
                 var attrValue;
-                return (attrValue = attr(child, name) + '') && attrValue.indexOf(value) != -1;
+                return (attrValue = getAttr(child, name) + '') && attrValue.indexOf(value) != -1;
             },
             /*
              W3C "an E element whose "attr" attribute has
@@ -310,13 +298,13 @@ var select = function() {
              */
             '|=': function (child, name, value) {
                 var attrValue;
-                return (attrValue = attr(child, name) + '') &&
+                return (attrValue = getAttr(child, name) + '') &&
                        (attrValue === value || !!attrValue.indexOf(value + '-'));
             },
             /* attr doesn't contain given value */
             '!=': function (child, name, value) {
                 var attrValue;
-                return !(attrValue = attr(child, name)) || !getAttrReg(value).test(attrValue);
+                return !(attrValue = getAttr(child, name)) || !getAttrReg(value).test(attrValue);
             }
         };
 

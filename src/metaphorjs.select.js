@@ -1,6 +1,6 @@
 
 var toArray = require("../../metaphorjs/src/func/array/toArray.js"),
-    attr = require("../../metaphorjs/src/func/dom/attr.js");
+    getAttr = require("../../metaphorjs/src/func/dom/getAttr.js");
 
 /**
  * Modified version of YASS (http://yass.webo.in)
@@ -155,7 +155,7 @@ module.exports = function() {
         attrMods    = {
             /* W3C "an E element with a "attr" attribute" */
             '': function (child, name) {
-                return attr(child, name) !== null;
+                return getAttr(child, name) !== null;
             },
             /*
              W3C "an E element whose "attr" attribute value is
@@ -163,7 +163,7 @@ module.exports = function() {
              */
             '=': function (child, name, value) {
                 var attrValue;
-                return (attrValue = attr(child, name)) && attrValue === value;
+                return (attrValue = getAttr(child, name)) && attrValue === value;
             },
             /*
              from w3.prg "an E element whose "attr" attribute value is
@@ -172,7 +172,7 @@ module.exports = function() {
              */
             '&=': function (child, name, value) {
                 var attrValue;
-                return (attrValue = attr(child, name)) && getAttrReg(value).test(attrValue);
+                return (attrValue = getAttr(child, name)) && getAttrReg(value).test(attrValue);
             },
             /*
              from w3.prg "an E element whose "attr" attribute value
@@ -180,7 +180,7 @@ module.exports = function() {
              */
             '^=': function (child, name, value) {
                 var attrValue;
-                return (attrValue = attr(child, name) + '') && !attrValue.indexOf(value);
+                return (attrValue = getAttr(child, name) + '') && !attrValue.indexOf(value);
             },
             /*
              W3C "an E element whose "attr" attribute value
@@ -188,7 +188,7 @@ module.exports = function() {
              */
             '$=': function (child, name, value) {
                 var attrValue;
-                return (attrValue = attr(child, name) + '') &&
+                return (attrValue = getAttr(child, name) + '') &&
                        attrValue.indexOf(value) == attrValue.length - value.length;
             },
             /*
@@ -197,7 +197,7 @@ module.exports = function() {
              */
             '*=': function (child, name, value) {
                 var attrValue;
-                return (attrValue = attr(child, name) + '') && attrValue.indexOf(value) != -1;
+                return (attrValue = getAttr(child, name) + '') && attrValue.indexOf(value) != -1;
             },
             /*
              W3C "an E element whose "attr" attribute has
@@ -206,13 +206,13 @@ module.exports = function() {
              */
             '|=': function (child, name, value) {
                 var attrValue;
-                return (attrValue = attr(child, name) + '') &&
+                return (attrValue = getAttr(child, name) + '') &&
                        (attrValue === value || !!attrValue.indexOf(value + '-'));
             },
             /* attr doesn't contain given value */
             '!=': function (child, name, value) {
                 var attrValue;
-                return !(attrValue = attr(child, name)) || !getAttrReg(value).test(attrValue);
+                return !(attrValue = getAttr(child, name)) || !getAttrReg(value).test(attrValue);
             }
         };
 
