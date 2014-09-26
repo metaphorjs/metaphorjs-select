@@ -2,82 +2,19 @@
 "use strict";
 
 var MetaphorJs = {
-    lib: {},
-    cmp: {},
-    view: {}
+
 };
+
 
 var undf = undefined;
-var toString = Object.prototype.toString;
 
-
-
-var varType = function(){
-
-    var types = {
-        '[object String]': 0,
-        '[object Number]': 1,
-        '[object Boolean]': 2,
-        '[object Object]': 3,
-        '[object Function]': 4,
-        '[object Array]': 5,
-        '[object RegExp]': 9,
-        '[object Date]': 10
-    };
-
-
-    /**
-        'string': 0,
-        'number': 1,
-        'boolean': 2,
-        'object': 3,
-        'function': 4,
-        'array': 5,
-        'null': 6,
-        'undefined': 7,
-        'NaN': 8,
-        'regexp': 9,
-        'date': 10
-    */
-
-    return function(val) {
-
-        if (!val) {
-            if (val === null) {
-                return 6;
-            }
-            if (val === undf) {
-                return 7;
-            }
-        }
-
-        var num = types[toString.call(val)];
-
-        if (num === undf) {
-            return -1;
-        }
-
-        if (num == 1 && isNaN(val)) {
-            return 8;
-        }
-
-        return num;
-    };
-
-}();
-
-
-var isString = function(value) {
-    return typeof value == "string" || value === ""+value;
-    //return typeof value == "string" || varType(value) === 0;
-};
 
 
 /**
  * @param {*} list
  * @returns {[]}
  */
-var toArray = function(list) {
+function toArray(list) {
     if (list && !list.length != undf && list !== ""+list) {
         for(var a = [], i =- 1, l = list.length>>>0; ++i !== l; a[i] = list[i]){}
         return a;
@@ -89,9 +26,11 @@ var toArray = function(list) {
         return [];
     }
 };
-var getAttr = function(el, name) {
-    return el.getAttribute(name);
+
+function getAttr(el, name) {
+    return el.getAttribute ? el.getAttribute(name) : null;
 };
+
 
 
 /**
@@ -99,7 +38,8 @@ var getAttr = function(el, name) {
  */
 
 /**
- * Returns number of nodes or an empty array
+ * Returns array of nodes or an empty array
+ * @function select
  * @param {String} selector
  * @param {Element} root to look into
  */
@@ -683,7 +623,6 @@ var select = function() {
     return select;
 }();
 MetaphorJs['select'] = select;
-
 typeof global != "undefined" ? (global['MetaphorJs'] = MetaphorJs) : (window['MetaphorJs'] = MetaphorJs);
 
 }());

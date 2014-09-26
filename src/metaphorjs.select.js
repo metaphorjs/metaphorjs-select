@@ -7,7 +7,8 @@ var toArray = require("../../metaphorjs/src/func/array/toArray.js"),
  */
 
 /**
- * Returns number of nodes or an empty array
+ * Returns array of nodes or an empty array
+ * @function select
  * @param {String} selector
  * @param {Element} root to look into
  */
