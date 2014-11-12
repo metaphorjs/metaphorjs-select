@@ -4,7 +4,7 @@
     "authors": [
         "kuindji <kuindji@gmail.com>"
     ],
-    "description": "MetaphorJs selector engine",
+    "description": "MetaphorJs selector engine (based on YASS)",
     "main": "dist/metaphorjs.select.amd.min.js",
     "moduleType": [
         "amd"
@@ -14,7 +14,7 @@
         "querySelectorAll"
     ],
     "license": "MIT",
-    "homepage": "https://github.com/kuindji/metaphorjs-select",
+    "homepage": "https://github.com/metaphorjs/metaphorjs-select",
     "ignore": [
         "node_modules",
         "bower_components",
