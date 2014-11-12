@@ -53,7 +53,7 @@ return function() {
         rRepAftPrn  = /\(.*/,
         rGetSquare  = /\[([^!~^*|$ [:=]+)([$^*|]?=)?([^ :\]]+)?\]/,
 
-        doc         = document,
+        doc         = window.document,
         bcn         = !!doc.getElementsByClassName,
         qsa         = !!doc.querySelectorAll,
 

@@ -24,14 +24,20 @@
         "npm": {
             "target": "dist/metaphorjs.select.npm.js",
             "compile": false,
+            "wrap": {
+                "exported": true,
+                "deferred": true,
+                "args": ["window"]
+            },
             "files": [
                 [
                     "src/metaphorjs.select.js",
                     {
-                        "keepExports": true
+                        "as": "select"
                     }
                 ]
-            ]
+            ],
+            "returns": "select"
         },
         "amd": {
             "target": "dist/metaphorjs.select.amd.js",

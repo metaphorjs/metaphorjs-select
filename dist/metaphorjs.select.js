@@ -1,7 +1,9 @@
 (function(){
 "use strict";
 
+
 var MetaphorJs = {
+
 
 };
 
@@ -59,7 +61,7 @@ var select = function() {
         rRepAftPrn  = /\(.*/,
         rGetSquare  = /\[([^!~^*|$ [:=]+)([$^*|]?=)?([^ :\]]+)?\]/,
 
-        doc         = document,
+        doc         = window.document,
         bcn         = !!doc.getElementsByClassName,
         qsa         = !!doc.querySelectorAll,
 

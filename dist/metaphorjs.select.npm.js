@@ -1,3 +1,5 @@
+module.exports = function (window) {
+"use strict";
 
 var undf = undefined;
 
@@ -36,7 +38,7 @@ function getAttr(el, name) {
  * @param {String} selector
  * @param {Element} root to look into
  */
-module.exports = function() {
+var select = function() {
 
     var rGeneric    = /^[\w[:#.][\w\]*^|=!]*$/,
         rQuote      = /=([^\]]+)/,
@@ -52,7 +54,7 @@ module.exports = function() {
         rRepAftPrn  = /\(.*/,
         rGetSquare  = /\[([^!~^*|$ [:=]+)([$^*|]?=)?([^ :\]]+)?\]/,
 
-        doc         = document,
+        doc         = window.document,
         bcn         = !!doc.getElementsByClassName,
         qsa         = !!doc.querySelectorAll,
 
@@ -615,3 +617,6 @@ module.exports = function() {
 
     return select;
 }();
+return select;
+
+};
