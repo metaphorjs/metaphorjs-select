@@ -624,7 +624,8 @@ var select = function() {
 
     return select;
 }();
-MetaphorJs['select'] = select;
-typeof global != "undefined" ? (global['MetaphorJs'] = MetaphorJs) : (window['MetaphorJs'] = MetaphorJs);
+var MetaphorJsExports = {};
+MetaphorJsExports['select'] = select;
+typeof global != "undefined" ? (global['MetaphorJs'] = MetaphorJsExports) : (window['MetaphorJs'] = MetaphorJsExports);
 
 }());

@@ -1,6 +1,6 @@
 
-var toArray = require("../../metaphorjs/src/func/array/toArray.js"),
-    getAttr = require("../../metaphorjs/src/func/dom/getAttr.js");
+var toArray = require("metaphorjs/src/func/array/toArray.js"),
+    getAttr = require("metaphorjs/src/func/dom/getAttr.js");
 
 /**
  * Modified version of YASS (http://yass.webo.in)

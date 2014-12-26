@@ -11,9 +11,9 @@
             "global": true,
             "target": "dist/metaphorjs.select.js",
             "files": [
-                "../metaphorjs/src/MetaphorJs.js",
+                "metaphorjs/src/MetaphorJs.js",
                 [
-                    "src/metaphorjs.select.js",
+                    "src/func/select.js",
                     {
                         "as": "select"
                     }
@@ -33,7 +33,7 @@
             },
             "files": [
                 [
-                    "src/metaphorjs.select.js",
+                    "src/func/select.js",
                     {
                         "as": "select"
                     }
@@ -45,7 +45,7 @@
             "target": "dist/metaphorjs.select.amd.js",
             "files": [
                 [
-                    "src/metaphorjs.select.js",
+                    "src/func/select.js",
                     {
                         "returnExports": true
                     }

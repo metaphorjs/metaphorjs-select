@@ -1,5 +1,5 @@
 
-var select = require("../metaphorjs.select.js");
+var select = require("./select.js");
 
 /**
  * @param {Element} el
