@@ -47,7 +47,7 @@ module.exports = function() {
             'last-child': function (child) {
                 var brother = child;
                 /* loop in lastChilds while nodeType isn't element */
-                while ((brother = brother.nextSibling) && brother.nodeType != 1) {}
+                while ((brother = brother.nextSibling) && brother.nodeType !== 1) {}
                 /* Check for node's existence */
                 return !!brother;
             },
@@ -70,7 +70,7 @@ module.exports = function() {
                     /* looping in child to find if nth expression is correct */
                     do {
                         /* nodeIndex expando used from Peppy / Sizzle/ jQuery */
-                        if (brother.nodeType == 1 && (brother.nodeIndex = ++i) && child === brother && ((i + a) % b)) {
+                        if (brother.nodeType === 1 && (brother.nodeIndex = ++i) && child === brother && ((i + a) % b)) {
                             return 0;
                         }
                     } while (brother = brother.nextSibling);
@@ -92,7 +92,7 @@ module.exports = function() {
                     var brother = child.parentNode.lastChild;
                     i++;
                     do {
-                        if (brother.nodeType == 1 && (brother.nodeLastIndex = i++) && child === brother && ((i + a) % b)) {
+                        if (brother.nodeType === 1 && (brother.nodeLastIndex = i++) && child === brother && ((i + a) % b)) {
                             return 0;
                         }
                     } while (brother = brother.previousSibling);
@@ -112,7 +112,7 @@ module.exports = function() {
             },
             /* W3C: "an E element, only child of its parent" */
             'only-child': function (child) {
-                return child.parentNode.getElementsByTagName('*').length != 1;
+                return child.parentNode.getElementsByTagName('*').length !== 1;
             },
             /*
              W3C: "a user interface element E which is checked
@@ -190,7 +190,7 @@ module.exports = function() {
             '$=': function (child, name, value) {
                 var attrValue;
                 return (attrValue = getAttr(child, name) + '') &&
-                       attrValue.indexOf(value) == attrValue.length - value.length;
+                       attrValue.indexOf(value) === attrValue.length - value.length;
             },
             /*
              W3C "an E element whose "attr" attribute value
@@ -198,7 +198,7 @@ module.exports = function() {
              */
             '*=': function (child, name, value) {
                 var attrValue;
-                return (attrValue = getAttr(child, name) + '') && attrValue.indexOf(value) != -1;
+                return (attrValue = getAttr(child, name) + '') && attrValue.indexOf(value) !== -1;
             },
             /*
              W3C "an E element whose "attr" attribute has
@@ -236,6 +236,7 @@ module.exports = function() {
                 sets = toArray(root.querySelectorAll(selector.replace(rQuote, '="$1"')));
             }
             catch (thrownError) {
+                //console.log(thrownError);
                 qsaErr = true;
             }
         }
@@ -287,7 +288,7 @@ module.exports = function() {
                             i = 0;
 
                             while (node = nodes[i++]) {
-                                if ((' ' + node.className + ' ').indexOf(cls) != -1) {
+                                if ((' ' + node.className + ' ').indexOf(cls) !== -1) {
                                     sets[idx++] = node;
                                 }
 
@@ -370,7 +371,12 @@ module.exports = function() {
                     i = 0;
                     ancestor = ' ';
                     /* is cleanded up with DOM root */
-                    nodes = [root];
+                    if (root instanceof DocumentFragment) {
+                        nodes = root.children;
+                    }
+                    else {
+                        nodes = [root];
+                    }
 
                     /*
                      John's Resig fast replace works a bit slower than
@@ -379,7 +385,8 @@ module.exports = function() {
                     while (single = singles[i++]) {
 
                         /* simple comparison is faster than hash */
-                        if (single !== ' ' && single !== '>' && single !== '~' && single !== '+' && nodes) {
+                        if (single !== ' ' && single !== '>' &&
+                            single !== '~' && single !== '+' && nodes) {
 
                             single = single.match(rSingleMatch);
 
@@ -398,7 +405,8 @@ module.exports = function() {
                              for nth-childs modificator already transformed into array.
                              Example used from Sizzle, rev. 2008-12-05, line 362.
                              */
-                            ind = mod === 'nth-child' || mod === 'nth-last-child' ?
+                            ind = mod === 'nth-child' ||
+                                    mod === 'nth-last-child' ?
                                   rNthNum.exec(
                                       single[8] === 'even' && '2n' ||
                                       single[8] === 'odd' && '2n%1' ||
@@ -417,7 +425,7 @@ module.exports = function() {
                             idx = J = 0;
 
                             /* if we need to mark node with expando yeasss */
-                            last = i == singles_length;
+                            last = i === singles_length;
 
                             /* loop in all root nodes */
                             while (child = nodes[J++]) {
@@ -467,10 +475,10 @@ module.exports = function() {
 
                                         /* don't touch already selected elements */
                                         while ((child = child.nextSibling) && !child.yeasss) {
-                                            if (child.nodeType == 1 &&
+                                            if (child.nodeType === 1 &&
                                                 (tag === '*' || child.nodeName.toLowerCase() === tag) &&
                                                 (!id || child.id === id) &&
-                                                (!klass || (' ' + child.className + ' ').indexOf(klass) != -1) &&
+                                                (!klass || (' ' + child.className + ' ').indexOf(klass) !== -1) &&
                                                 (!attrName || (attrMods[eql] &&
                                                            (attrMods[eql](item, attrName, single[6]) ||
                                                             (attrName === 'class' &&
@@ -488,11 +496,11 @@ module.exports = function() {
 
                                     /* W3C: "an F element immediately preceded by an E element" */
                                     case '+':
-                                        while ((child = child.nextSibling) && child.nodeType != 1) {}
+                                        while ((child = child.nextSibling) && child.nodeType !== 1) {}
                                         if (child &&
                                             (child.nodeName.toLowerCase() === tag.toLowerCase() || tag === '*') &&
                                             (!id || child.id === id) &&
-                                            (!klass || (' ' + item.className + ' ').indexOf(klass) != -1) &&
+                                            (!klass || (' ' + item.className + ' ').indexOf(klass) !== -1) &&
                                             (!attrName ||
                                              (attrMods[eql] && (attrMods[eql](item, attrName, single[6]) ||
                                                                 (attrName === 'class' &&
@@ -554,7 +562,7 @@ module.exports = function() {
                             nodes = newNodes;
                             /* concat is faster than simple looping */
                         }
-                        sets = nodes.concat(sets.length == 1 ? sets[0] : sets);
+                        sets = nodes.concat(sets.length === 1 ? sets[0] : sets);
 
                     } else {
 
