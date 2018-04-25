@@ -230,7 +230,7 @@ module.exports = function() {
             i, node, ind, mod,
             attrs, attrName, eql, value;
 
-        if (qsa) {
+        if (qsa && root.querySelectorAll) {
             /* replace not quoted args with quoted one -- Safari doesn't understand either */
             try {
                 sets = toArray(root.querySelectorAll(selector.replace(rQuote, '="$1"')));
@@ -428,33 +428,35 @@ module.exports = function() {
                                  */
                                 switch (ancestor) {
                                     case ' ':
-                                        childs = child.getElementsByTagName(tag);
-                                        h = 0;
-                                        while (item = childs[h++]) {
-                                            /*
-                                             check them for ID or Class. Also check for expando 'yeasss'
-                                             to filter non-selected elements. Typeof 'string' not added -
-                                             if we get element with name="id" it won't be equal to given ID string.
-                                             Also check for given attributes selector.
-                                             Modificator is either not set in the selector, or just has been nulled
-                                             by modificator functions hash.
-                                             */
-                                            if ((!id || item.id === id) &&
-                                                (!klass || (' ' + item.className + ' ').indexOf(klass) != -1) &&
-                                                (!attrName || (attrMods[eql] &&
-                                                           (attrMods[eql](item, attrName, single[6]) ||
-                                                            (attrName === 'class' &&
-                                                             attrMods[eql](item, 'className', single[6]))))) &&
-                                                !item.yeasss && !(mods[mod] ? mods[mod](item, ind) : mod)) {
-
+                                        if (child.getElementsByTagName) {
+                                            childs = child.getElementsByTagName(tag);
+                                            h = 0;
+                                            while (item = childs[h++]) {
                                                 /*
-                                                 Need to define expando property to true for the last step.
-                                                 Then mark selected element with expando
-                                                 */
-                                                if (last) {
-                                                    item.yeasss = 1;
+                                                check them for ID or Class. Also check for expando 'yeasss'
+                                                to filter non-selected elements. Typeof 'string' not added -
+                                                if we get element with name="id" it won't be equal to given ID string.
+                                                Also check for given attributes selector.
+                                                Modificator is either not set in the selector, or just has been nulled
+                                                by modificator functions hash.
+                                                */
+                                                if ((!id || item.id === id) &&
+                                                    (!klass || (' ' + item.className + ' ').indexOf(klass) != -1) &&
+                                                    (!attrName || (attrMods[eql] &&
+                                                            (attrMods[eql](item, attrName, single[6]) ||
+                                                                (attrName === 'class' &&
+                                                                attrMods[eql](item, 'className', single[6]))))) &&
+                                                    !item.yeasss && !(mods[mod] ? mods[mod](item, ind) : mod)) {
+
+                                                    /*
+                                                    Need to define expando property to true for the last step.
+                                                    Then mark selected element with expando
+                                                    */
+                                                    if (last) {
+                                                        item.yeasss = 1;
+                                                    }
+                                                    newNodes[idx++] = item;
                                                 }
-                                                newNodes[idx++] = item;
                                             }
                                         }
                                         break;
@@ -506,23 +508,25 @@ module.exports = function() {
 
                                     /* W3C: "an F element child of an E element" */
                                     case '>':
-                                        childs = child.getElementsByTagName(tag);
-                                        i = 0;
-                                        while (item = childs[i++]) {
-                                            if (item.parentNode === child &&
-                                                (!id || item.id === id) &&
-                                                (!klass || (' ' + item.className + ' ').indexOf(klass) != -1) &&
-                                                (!attrName || (attrMods[eql] &&
-                                                           (attrMods[eql](item, attrName, single[6]) ||
-                                                            (attrName === 'class' &&
-                                                             attrMods[eql](item, 'className', single[6]))))) &&
-                                                !item.yeasss &&
-                                                !(mods[mod] ? mods[mod](item, ind) : mod)) {
+                                        if (child.getElementsByTagName) {
+                                            childs = child.getElementsByTagName(tag);
+                                            i = 0;
+                                            while (item = childs[i++]) {
+                                                if (item.parentNode === child &&
+                                                    (!id || item.id === id) &&
+                                                    (!klass || (' ' + item.className + ' ').indexOf(klass) != -1) &&
+                                                    (!attrName || (attrMods[eql] &&
+                                                            (attrMods[eql](item, attrName, single[6]) ||
+                                                                (attrName === 'class' &&
+                                                                attrMods[eql](item, 'className', single[6]))))) &&
+                                                    !item.yeasss &&
+                                                    !(mods[mod] ? mods[mod](item, ind) : mod)) {
 
-                                                if (last) {
-                                                    item.yeasss = 1;
+                                                    if (last) {
+                                                        item.yeasss = 1;
+                                                    }
+                                                    newNodes[idx++] = item;
                                                 }
-                                                newNodes[idx++] = item;
                                             }
                                         }
                                         break;
