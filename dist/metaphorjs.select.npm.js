@@ -1,4 +1,6 @@
+
 module.exports = function (window) {
+/* BUNDLE START 03V */
 "use strict";
 
 var undf = undefined;
@@ -73,7 +75,7 @@ var select = function() {
             'last-child': function (child) {
                 var brother = child;
                 /* loop in lastChilds while nodeType isn't element */
-                while ((brother = brother.nextSibling) && brother.nodeType != 1) {}
+                while ((brother = brother.nextSibling) && brother.nodeType !== 1) {}
                 /* Check for node's existence */
                 return !!brother;
             },
@@ -96,7 +98,7 @@ var select = function() {
                     /* looping in child to find if nth expression is correct */
                     do {
                         /* nodeIndex expando used from Peppy / Sizzle/ jQuery */
-                        if (brother.nodeType == 1 && (brother.nodeIndex = ++i) && child === brother && ((i + a) % b)) {
+                        if (brother.nodeType === 1 && (brother.nodeIndex = ++i) && child === brother && ((i + a) % b)) {
                             return 0;
                         }
                     } while (brother = brother.nextSibling);
@@ -118,7 +120,7 @@ var select = function() {
                     var brother = child.parentNode.lastChild;
                     i++;
                     do {
-                        if (brother.nodeType == 1 && (brother.nodeLastIndex = i++) && child === brother && ((i + a) % b)) {
+                        if (brother.nodeType === 1 && (brother.nodeLastIndex = i++) && child === brother && ((i + a) % b)) {
                             return 0;
                         }
                     } while (brother = brother.previousSibling);
@@ -138,7 +140,7 @@ var select = function() {
             },
             /* W3C: "an E element, only child of its parent" */
             'only-child': function (child) {
-                return child.parentNode.getElementsByTagName('*').length != 1;
+                return child.parentNode.getElementsByTagName('*').length !== 1;
             },
             /*
              W3C: "a user interface element E which is checked
@@ -216,7 +218,7 @@ var select = function() {
             '$=': function (child, name, value) {
                 var attrValue;
                 return (attrValue = getAttr(child, name) + '') &&
-                       attrValue.indexOf(value) == attrValue.length - value.length;
+                       attrValue.indexOf(value) === attrValue.length - value.length;
             },
             /*
              W3C "an E element whose "attr" attribute value
@@ -224,7 +226,7 @@ var select = function() {
              */
             '*=': function (child, name, value) {
                 var attrValue;
-                return (attrValue = getAttr(child, name) + '') && attrValue.indexOf(value) != -1;
+                return (attrValue = getAttr(child, name) + '') && attrValue.indexOf(value) !== -1;
             },
             /*
              W3C "an E element whose "attr" attribute has
@@ -256,12 +258,13 @@ var select = function() {
             i, node, ind, mod,
             attrs, attrName, eql, value;
 
-        if (qsa) {
+        if (qsa && root.querySelectorAll) {
             /* replace not quoted args with quoted one -- Safari doesn't understand either */
             try {
                 sets = toArray(root.querySelectorAll(selector.replace(rQuote, '="$1"')));
             }
             catch (thrownError) {
+                //console.log(thrownError);
                 qsaErr = true;
             }
         }
@@ -313,7 +316,7 @@ var select = function() {
                             i = 0;
 
                             while (node = nodes[i++]) {
-                                if ((' ' + node.className + ' ').indexOf(cls) != -1) {
+                                if ((' ' + node.className + ' ').indexOf(cls) !== -1) {
                                     sets[idx++] = node;
                                 }
 
@@ -396,7 +399,12 @@ var select = function() {
                     i = 0;
                     ancestor = ' ';
                     /* is cleanded up with DOM root */
-                    nodes = [root];
+                    if (root instanceof DocumentFragment) {
+                        nodes = root.children;
+                    }
+                    else {
+                        nodes = [root];
+                    }
 
                     /*
                      John's Resig fast replace works a bit slower than
@@ -405,7 +413,8 @@ var select = function() {
                     while (single = singles[i++]) {
 
                         /* simple comparison is faster than hash */
-                        if (single !== ' ' && single !== '>' && single !== '~' && single !== '+' && nodes) {
+                        if (single !== ' ' && single !== '>' &&
+                            single !== '~' && single !== '+' && nodes) {
 
                             single = single.match(rSingleMatch);
 
@@ -424,7 +433,8 @@ var select = function() {
                              for nth-childs modificator already transformed into array.
                              Example used from Sizzle, rev. 2008-12-05, line 362.
                              */
-                            ind = mod === 'nth-child' || mod === 'nth-last-child' ?
+                            ind = mod === 'nth-child' ||
+                                    mod === 'nth-last-child' ?
                                   rNthNum.exec(
                                       single[8] === 'even' && '2n' ||
                                       single[8] === 'odd' && '2n%1' ||
@@ -443,7 +453,7 @@ var select = function() {
                             idx = J = 0;
 
                             /* if we need to mark node with expando yeasss */
-                            last = i == singles_length;
+                            last = i === singles_length;
 
                             /* loop in all root nodes */
                             while (child = nodes[J++]) {
@@ -454,33 +464,35 @@ var select = function() {
                                  */
                                 switch (ancestor) {
                                     case ' ':
-                                        childs = child.getElementsByTagName(tag);
-                                        h = 0;
-                                        while (item = childs[h++]) {
-                                            /*
-                                             check them for ID or Class. Also check for expando 'yeasss'
-                                             to filter non-selected elements. Typeof 'string' not added -
-                                             if we get element with name="id" it won't be equal to given ID string.
-                                             Also check for given attributes selector.
-                                             Modificator is either not set in the selector, or just has been nulled
-                                             by modificator functions hash.
-                                             */
-                                            if ((!id || item.id === id) &&
-                                                (!klass || (' ' + item.className + ' ').indexOf(klass) != -1) &&
-                                                (!attrName || (attrMods[eql] &&
-                                                           (attrMods[eql](item, attrName, single[6]) ||
-                                                            (attrName === 'class' &&
-                                                             attrMods[eql](item, 'className', single[6]))))) &&
-                                                !item.yeasss && !(mods[mod] ? mods[mod](item, ind) : mod)) {
-
+                                        if (child.getElementsByTagName) {
+                                            childs = child.getElementsByTagName(tag);
+                                            h = 0;
+                                            while (item = childs[h++]) {
                                                 /*
-                                                 Need to define expando property to true for the last step.
-                                                 Then mark selected element with expando
-                                                 */
-                                                if (last) {
-                                                    item.yeasss = 1;
+                                                check them for ID or Class. Also check for expando 'yeasss'
+                                                to filter non-selected elements. Typeof 'string' not added -
+                                                if we get element with name="id" it won't be equal to given ID string.
+                                                Also check for given attributes selector.
+                                                Modificator is either not set in the selector, or just has been nulled
+                                                by modificator functions hash.
+                                                */
+                                                if ((!id || item.id === id) &&
+                                                    (!klass || (' ' + item.className + ' ').indexOf(klass) != -1) &&
+                                                    (!attrName || (attrMods[eql] &&
+                                                            (attrMods[eql](item, attrName, single[6]) ||
+                                                                (attrName === 'class' &&
+                                                                attrMods[eql](item, 'className', single[6]))))) &&
+                                                    !item.yeasss && !(mods[mod] ? mods[mod](item, ind) : mod)) {
+
+                                                    /*
+                                                    Need to define expando property to true for the last step.
+                                                    Then mark selected element with expando
+                                                    */
+                                                    if (last) {
+                                                        item.yeasss = 1;
+                                                    }
+                                                    newNodes[idx++] = item;
                                                 }
-                                                newNodes[idx++] = item;
                                             }
                                         }
                                         break;
@@ -491,10 +503,10 @@ var select = function() {
 
                                         /* don't touch already selected elements */
                                         while ((child = child.nextSibling) && !child.yeasss) {
-                                            if (child.nodeType == 1 &&
+                                            if (child.nodeType === 1 &&
                                                 (tag === '*' || child.nodeName.toLowerCase() === tag) &&
                                                 (!id || child.id === id) &&
-                                                (!klass || (' ' + child.className + ' ').indexOf(klass) != -1) &&
+                                                (!klass || (' ' + child.className + ' ').indexOf(klass) !== -1) &&
                                                 (!attrName || (attrMods[eql] &&
                                                            (attrMods[eql](item, attrName, single[6]) ||
                                                             (attrName === 'class' &&
@@ -512,11 +524,11 @@ var select = function() {
 
                                     /* W3C: "an F element immediately preceded by an E element" */
                                     case '+':
-                                        while ((child = child.nextSibling) && child.nodeType != 1) {}
+                                        while ((child = child.nextSibling) && child.nodeType !== 1) {}
                                         if (child &&
                                             (child.nodeName.toLowerCase() === tag.toLowerCase() || tag === '*') &&
                                             (!id || child.id === id) &&
-                                            (!klass || (' ' + item.className + ' ').indexOf(klass) != -1) &&
+                                            (!klass || (' ' + item.className + ' ').indexOf(klass) !== -1) &&
                                             (!attrName ||
                                              (attrMods[eql] && (attrMods[eql](item, attrName, single[6]) ||
                                                                 (attrName === 'class' &&
@@ -532,23 +544,25 @@ var select = function() {
 
                                     /* W3C: "an F element child of an E element" */
                                     case '>':
-                                        childs = child.getElementsByTagName(tag);
-                                        i = 0;
-                                        while (item = childs[i++]) {
-                                            if (item.parentNode === child &&
-                                                (!id || item.id === id) &&
-                                                (!klass || (' ' + item.className + ' ').indexOf(klass) != -1) &&
-                                                (!attrName || (attrMods[eql] &&
-                                                           (attrMods[eql](item, attrName, single[6]) ||
-                                                            (attrName === 'class' &&
-                                                             attrMods[eql](item, 'className', single[6]))))) &&
-                                                !item.yeasss &&
-                                                !(mods[mod] ? mods[mod](item, ind) : mod)) {
+                                        if (child.getElementsByTagName) {
+                                            childs = child.getElementsByTagName(tag);
+                                            i = 0;
+                                            while (item = childs[i++]) {
+                                                if (item.parentNode === child &&
+                                                    (!id || item.id === id) &&
+                                                    (!klass || (' ' + item.className + ' ').indexOf(klass) != -1) &&
+                                                    (!attrName || (attrMods[eql] &&
+                                                            (attrMods[eql](item, attrName, single[6]) ||
+                                                                (attrName === 'class' &&
+                                                                attrMods[eql](item, 'className', single[6]))))) &&
+                                                    !item.yeasss &&
+                                                    !(mods[mod] ? mods[mod](item, ind) : mod)) {
 
-                                                if (last) {
-                                                    item.yeasss = 1;
+                                                    if (last) {
+                                                        item.yeasss = 1;
+                                                    }
+                                                    newNodes[idx++] = item;
                                                 }
-                                                newNodes[idx++] = item;
                                             }
                                         }
                                         break;
@@ -576,7 +590,7 @@ var select = function() {
                             nodes = newNodes;
                             /* concat is faster than simple looping */
                         }
-                        sets = nodes.concat(sets.length == 1 ? sets[0] : sets);
+                        sets = nodes.concat(sets.length === 1 ? sets[0] : sets);
 
                     } else {
 
@@ -617,6 +631,4 @@ var select = function() {
 
     return select;
 }();
-return select;
-
-};
+};/* BUNDLE END 03V */

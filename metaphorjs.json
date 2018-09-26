@@ -7,53 +7,54 @@
     ],
     "build": {
         "standalone": {
-            "wrap": true,
-            "global": true,
             "target": "dist/metaphorjs.select.js",
             "files": [
-                "metaphorjs/src/MetaphorJs.js",
-                [
-                    "src/func/select.js",
-                    {
-                        "as": "select"
-                    }
-                ]
+                ["src/func/select.js", {"as": "*"}]
             ],
-            "expose": [
-                "select"
-            ]
+            "options": {
+                "wrap": true,
+                "global": true,
+                "expose": [
+                    "select"
+                ]
+            }
+        },
+        "standalone-min": {
+            "extend": "standalone",
+            "target": "dist/metaphorjs.select.min.js",
+            "pipe": ["build", "compile", "write"]
         },
         "npm": {
             "target": "dist/metaphorjs.select.npm.js",
-            "compile": false,
-            "wrap": {
-                "exported": true,
-                "deferred": true,
-                "args": ["window"]
-            },
             "files": [
-                [
-                    "src/func/select.js",
-                    {
-                        "as": "select"
-                    }
-                ]
+                ["src/func/select.js", {"as": "*"}]
             ],
-            "returns": "select"
+            "options": {
+                "wrap": {
+                    "deferred": true,
+                    "args": ["window"]
+                },
+                "return": "select",
+                "exports": true
+            }
         },
         "amd": {
             "target": "dist/metaphorjs.select.amd.js",
             "files": [
-                [
-                    "src/func/select.js",
-                    {
-                        "returnExports": true
-                    }
-                ]
+                ["src/func/select.js", {"as": "*"}]
             ],
-            "define": {
-                "name": "metaphorjs-select"
+            "options": {
+                "amd": {
+                    "name": "metaphorjs-select",
+                    "return": "select"
+                }
             }
+            
+        },
+        "amd-min": {
+            "extend": "amd",
+            "target": "dist/metaphorjs.select.amd.min.js",
+            "pipe": ["build", "compile", "write"]
         }
     }
 }
