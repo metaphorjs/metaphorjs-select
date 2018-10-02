@@ -1,8 +1,8 @@
 
-require("./__init.js");
+require("metaphorjs/src/func/dom/__init.js");
+require("metaphorjs/src/func/dom/getAttr.js");
 
 var toArray = require("metaphorjs-shared/src/func/toArray.js"),
-    dom_getAttr = require("metaphorjs/src/func/dom/getAttr.js"),
     error = require("metaphorjs-shared/src/func/error.js"),
     MetaphorJs = require("metaphorjs-shared/src/MetaphorJs.js");
 
@@ -160,7 +160,7 @@ module.exports = MetaphorJs.dom.select = function() {
         attrMods    = {
             /* W3C "an E element with a "attr" attribute" */
             '': function (child, name) {
-                return dom_getAttr(child, name) !== null;
+                return MetaphorJs.dom.getAttr(child, name) !== null;
             },
             /*
              W3C "an E element whose "attr" attribute value is
@@ -168,7 +168,7 @@ module.exports = MetaphorJs.dom.select = function() {
              */
             '=': function (child, name, value) {
                 var attrValue;
-                return (attrValue = dom_getAttr(child, name)) && attrValue === value;
+                return (attrValue = MetaphorJs.dom.getAttr(child, name)) && attrValue === value;
             },
             /*
              from w3.prg "an E element whose "attr" attribute value is
@@ -177,7 +177,7 @@ module.exports = MetaphorJs.dom.select = function() {
              */
             '&=': function (child, name, value) {
                 var attrValue;
-                return (attrValue = dom_getAttr(child, name)) && getAttrReg(value).test(attrValue);
+                return (attrValue = MetaphorJs.dom.getAttr(child, name)) && getAttrReg(value).test(attrValue);
             },
             /*
              from w3.prg "an E element whose "attr" attribute value
@@ -185,7 +185,7 @@ module.exports = MetaphorJs.dom.select = function() {
              */
             '^=': function (child, name, value) {
                 var attrValue;
-                return (attrValue = dom_getAttr(child, name) + '') && !attrValue.indexOf(value);
+                return (attrValue = MetaphorJs.dom.getAttr(child, name) + '') && !attrValue.indexOf(value);
             },
             /*
              W3C "an E element whose "attr" attribute value
@@ -193,7 +193,7 @@ module.exports = MetaphorJs.dom.select = function() {
              */
             '$=': function (child, name, value) {
                 var attrValue;
-                return (attrValue = dom_getAttr(child, name) + '') &&
+                return (attrValue = MetaphorJs.dom.getAttr(child, name) + '') &&
                        attrValue.indexOf(value) === attrValue.length - value.length;
             },
             /*
@@ -202,7 +202,7 @@ module.exports = MetaphorJs.dom.select = function() {
              */
             '*=': function (child, name, value) {
                 var attrValue;
-                return (attrValue = dom_getAttr(child, name) + '') && attrValue.indexOf(value) !== -1;
+                return (attrValue = MetaphorJs.dom.getAttr(child, name) + '') && attrValue.indexOf(value) !== -1;
             },
             /*
              W3C "an E element whose "attr" attribute has
@@ -211,13 +211,13 @@ module.exports = MetaphorJs.dom.select = function() {
              */
             '|=': function (child, name, value) {
                 var attrValue;
-                return (attrValue = dom_getAttr(child, name) + '') &&
+                return (attrValue = MetaphorJs.dom.getAttr(child, name) + '') &&
                        (attrValue === value || !!attrValue.indexOf(value + '-'));
             },
             /* attr doesn't contain given value */
             '!=': function (child, name, value) {
                 var attrValue;
-                return !(attrValue = dom_getAttr(child, name)) || !getAttrReg(value).test(attrValue);
+                return !(attrValue = MetaphorJs.dom.getAttr(child, name)) || !getAttrReg(value).test(attrValue);
             }
         };
 

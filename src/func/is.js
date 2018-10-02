@@ -1,8 +1,8 @@
 
-require("./__init.js");
+require("metaphorjs/src/func/dom/__init.js");
+require("./select.js");
 
-var dom_select = require("./select.js"),
-    MetaphorJs = require("metaphorjs-shared/src/MetaphorJs.js");
+var MetaphorJs = require("metaphorjs-shared/src/MetaphorJs.js");
 
 /**
  * Check if given element matches selector
@@ -13,7 +13,7 @@ var dom_select = require("./select.js"),
  */
 module.exports = MetaphorJs.dom.is = function(el, selector) {
 
-    var els = dom_select(selector, el.parentNode),
+    var els = MetaphorJs.dom.select(selector, el.parentNode),
         i, l;
 
     for (i = -1, l = els.length; ++i < l;) {

@@ -14,6 +14,13 @@ var MetaphorJs = {
 
 MetaphorJs.dom = MetaphorJs.dom || {};
 
+
+
+
+var dom_getAttr = MetaphorJs.dom.getAttr = function(el, name) {
+    return el.getAttribute ? el.getAttribute(name) : null;
+};
+
 var undf = undefined;
 
 
@@ -35,10 +42,6 @@ function toArray(list) {
     else {
         return [];
     }
-};
-
-var dom_getAttr = function getAttr(el, name) {
-    return el.getAttribute ? el.getAttribute(name) : null;
 };
 
 var strUndef = "undefined";
@@ -106,6 +109,7 @@ var error = (function(){
 
 
 
+
 /**
  * Modified version of YASS (http://yass.webo.in)
  */
@@ -116,7 +120,7 @@ var error = (function(){
  * @param {string} selector
  * @param {Element} root to look into
  */
-var select = MetaphorJs.dom.select = function() {
+MetaphorJs.dom.select = function() {
 
     var rGeneric    = /^[\w[:#.][\w\]*^|=!]*$/,
         rQuote      = /=([^\]]+)/,

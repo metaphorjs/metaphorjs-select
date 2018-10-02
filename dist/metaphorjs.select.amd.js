@@ -1,5 +1,5 @@
 define("metaphorjs-select", function() {
-/* BUNDLE START 0JX */
+/* BUNDLE START 0KL */
 "use strict";
 
 
@@ -13,6 +13,13 @@ var MetaphorJs = {
 
 
 MetaphorJs.dom = MetaphorJs.dom || {};
+
+
+
+
+var dom_getAttr = MetaphorJs.dom.getAttr = function(el, name) {
+    return el.getAttribute ? el.getAttribute(name) : null;
+};
 
 var undf = undefined;
 
@@ -35,10 +42,6 @@ function toArray(list) {
     else {
         return [];
     }
-};
-
-var dom_getAttr = function getAttr(el, name) {
-    return el.getAttribute ? el.getAttribute(name) : null;
 };
 
 var strUndef = "undefined";
@@ -99,6 +102,7 @@ var error = (function(){
 
     return error;
 }());
+
 
 
 
@@ -692,7 +696,7 @@ var select = MetaphorJs.dom.select = function() {
         return sets;
     };
 }();
-return MetaphorJs.select;
+return MetaphorJs.dom.select;
 });
 
-/* BUNDLE END 0JX */
+/* BUNDLE END 0KL */

@@ -7,7 +7,7 @@
         "standalone": {
             "target": "dist/metaphorjs.select.js",
             "files": [
-                ["src/func/select.js", {"as": "*"}]
+                "src/func/select.js"
             ],
             "options": {
                 "wrap": true,
@@ -25,13 +25,13 @@
         "npm": {
             "target": "dist/metaphorjs.select.npm.js",
             "files": [
-                ["src/func/select.js", {"as": "*"}]
+                "src/func/select.js"
             ],
             "options": {
                 "wrap": {
                     "deferred": true,
                     "args": ["window"],
-                    "return": "MetaphorJs.select",
+                    "return": "MetaphorJs.dom.select",
                     "exports": true
                 }
             }
@@ -45,7 +45,7 @@
             "options": {
                 "amd": {
                     "name": "metaphorjs-select",
-                    "return": "MetaphorJs.select"
+                    "return": "MetaphorJs.dom.select"
                 }
             }
             
