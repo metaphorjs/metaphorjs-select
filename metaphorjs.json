@@ -2,10 +2,8 @@
     "version": "0.1.3",
     "description": "MetaphorJs selector engine (based on YASS)",
 
-    "push": [
-        "github"
-    ],
     "build": {
+
         "standalone": {
             "target": "dist/metaphorjs.select.js",
             "files": [
@@ -13,10 +11,9 @@
             ],
             "options": {
                 "wrap": true,
-                "global": true,
-                "expose": [
-                    "select"
-                ]
+                "global": {
+                    "expose": "MetaphorJs"
+                }
             }
         },
         "standalone-min": {
@@ -24,6 +21,7 @@
             "target": "dist/metaphorjs.select.min.js",
             "pipe": ["build", "compile", "write"]
         },
+
         "npm": {
             "target": "dist/metaphorjs.select.npm.js",
             "files": [
@@ -32,12 +30,13 @@
             "options": {
                 "wrap": {
                     "deferred": true,
-                    "args": ["window"]
-                },
-                "return": "select",
-                "exports": true
+                    "args": ["window"],
+                    "return": "MetaphorJs.select",
+                    "exports": true
+                }
             }
         },
+
         "amd": {
             "target": "dist/metaphorjs.select.amd.js",
             "files": [
@@ -46,7 +45,7 @@
             "options": {
                 "amd": {
                     "name": "metaphorjs-select",
-                    "return": "select"
+                    "return": "MetaphorJs.select"
                 }
             }
             
@@ -56,5 +55,6 @@
             "target": "dist/metaphorjs.select.amd.min.js",
             "pipe": ["build", "compile", "write"]
         }
+
     }
 }

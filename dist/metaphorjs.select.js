@@ -2,13 +2,27 @@
 /* BUNDLE START 003 */
 "use strict";
 
+
+var MetaphorJs = {
+    plugin: {},
+    mixin: {},
+    lib: {}
+};
+
+
+
+
+MetaphorJs.dom = MetaphorJs.dom || {};
+
 var undf = undefined;
 
 
 
 /**
+ * Transform anything into array
+ * @function toArray
  * @param {*} list
- * @returns {[]}
+ * @returns {array}
  */
 function toArray(list) {
     if (list && !list.length != undf && list !== ""+list) {
@@ -23,9 +37,72 @@ function toArray(list) {
     }
 };
 
-function getAttr(el, name) {
+var dom_getAttr = function getAttr(el, name) {
     return el.getAttribute ? el.getAttribute(name) : null;
 };
+
+var strUndef = "undefined";
+
+
+
+/**
+ * Log thrown error to console (in debug mode) and 
+ * call all error listeners
+ * @function error
+ * @param {Error} e 
+ */
+var error = (function(){
+
+    var listeners = [];
+
+    var error = function error(e) {
+
+        var i, l;
+
+        for (i = 0, l = listeners.length; i < l; i++) {
+            listeners[i][0].call(listeners[i][1], e)
+        }
+
+        /*DEBUG-START*/
+        if (typeof console != strUndef && console.error) {
+            console.error(e);
+        }
+        /*DEBUG-END*/
+    };
+
+    /**
+     * Subscribe to all errors
+     * @method on
+     * @param {function} fn 
+     * @param {object} context 
+     */
+    error.on = function(fn, context) {
+        error.un(fn, context);
+        listeners.push([fn, context]);
+    };
+
+    /**
+     * Unsubscribe from all errors
+     * @method un
+     * @param {function} fn 
+     * @param {object} context 
+     */
+    error.un = function(fn, context) {
+        var i, l;
+        for (i = 0, l = listeners.length; i < l; i++) {
+            if (listeners[i][0] === fn && listeners[i][1] === context) {
+                listeners.splice(i, 1);
+                break;
+            }
+        }
+    };
+
+    return error;
+}());
+
+
+
+
 
 
 
@@ -35,11 +112,11 @@ function getAttr(el, name) {
 
 /**
  * Returns array of nodes or an empty array
- * @function select
- * @param {String} selector
+ * @function MetaphorJs.dom.select
+ * @param {string} selector
  * @param {Element} root to look into
  */
-var select = function() {
+var select = MetaphorJs.dom.select = function() {
 
     var rGeneric    = /^[\w[:#.][\w\]*^|=!]*$/,
         rQuote      = /=([^\]]+)/,
@@ -183,7 +260,7 @@ var select = function() {
         attrMods    = {
             /* W3C "an E element with a "attr" attribute" */
             '': function (child, name) {
-                return getAttr(child, name) !== null;
+                return dom_getAttr(child, name) !== null;
             },
             /*
              W3C "an E element whose "attr" attribute value is
@@ -191,7 +268,7 @@ var select = function() {
              */
             '=': function (child, name, value) {
                 var attrValue;
-                return (attrValue = getAttr(child, name)) && attrValue === value;
+                return (attrValue = dom_getAttr(child, name)) && attrValue === value;
             },
             /*
              from w3.prg "an E element whose "attr" attribute value is
@@ -200,7 +277,7 @@ var select = function() {
              */
             '&=': function (child, name, value) {
                 var attrValue;
-                return (attrValue = getAttr(child, name)) && getAttrReg(value).test(attrValue);
+                return (attrValue = dom_getAttr(child, name)) && getAttrReg(value).test(attrValue);
             },
             /*
              from w3.prg "an E element whose "attr" attribute value
@@ -208,7 +285,7 @@ var select = function() {
              */
             '^=': function (child, name, value) {
                 var attrValue;
-                return (attrValue = getAttr(child, name) + '') && !attrValue.indexOf(value);
+                return (attrValue = dom_getAttr(child, name) + '') && !attrValue.indexOf(value);
             },
             /*
              W3C "an E element whose "attr" attribute value
@@ -216,7 +293,7 @@ var select = function() {
              */
             '$=': function (child, name, value) {
                 var attrValue;
-                return (attrValue = getAttr(child, name) + '') &&
+                return (attrValue = dom_getAttr(child, name) + '') &&
                        attrValue.indexOf(value) === attrValue.length - value.length;
             },
             /*
@@ -225,7 +302,7 @@ var select = function() {
              */
             '*=': function (child, name, value) {
                 var attrValue;
-                return (attrValue = getAttr(child, name) + '') && attrValue.indexOf(value) !== -1;
+                return (attrValue = dom_getAttr(child, name) + '') && attrValue.indexOf(value) !== -1;
             },
             /*
              W3C "an E element whose "attr" attribute has
@@ -234,18 +311,18 @@ var select = function() {
              */
             '|=': function (child, name, value) {
                 var attrValue;
-                return (attrValue = getAttr(child, name) + '') &&
+                return (attrValue = dom_getAttr(child, name) + '') &&
                        (attrValue === value || !!attrValue.indexOf(value + '-'));
             },
             /* attr doesn't contain given value */
             '!=': function (child, name, value) {
                 var attrValue;
-                return !(attrValue = getAttr(child, name)) || !getAttrReg(value).test(attrValue);
+                return !(attrValue = dom_getAttr(child, name)) || !getAttrReg(value).test(attrValue);
             }
         };
 
 
-    var select = function (selector, root) {
+    return function(selector, root) {
 
         /* clean root with document */
         root = root || doc;
@@ -263,7 +340,7 @@ var select = function() {
                 sets = toArray(root.querySelectorAll(selector.replace(rQuote, '="$1"')));
             }
             catch (thrownError) {
-                //console.log(thrownError);
+                error(thrownError);
                 qsaErr = true;
             }
         }
@@ -614,25 +691,7 @@ var select = function() {
         /* return and cache results */
         return sets;
     };
-
-    select.is = function(el, selector) {
-
-        var els = select(selector, el.parentNode),
-            i, l;
-
-        for (i = -1, l = els.length; ++i < l;) {
-            if (els[i] === el) {
-                return true;
-            }
-        }
-        return false;
-    };
-
-    return select;
 }();
-var __mjsExport = {};
-__mjsExport['select'] = select;
-
-typeof global != "undefined" ? (global['MetaphorJs'] = __mjsExport) : (window['MetaphorJs'] = __mjsExport);
+typeof global != "undefined" ? (global['MetaphorJs'] = MetaphorJs) : (window['MetaphorJs'] = MetaphorJs);
 
 }());/* BUNDLE END 003 */
